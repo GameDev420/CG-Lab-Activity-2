@@ -35,14 +35,11 @@ Shader "Custom/StencilWrite_FrontObject"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                //float3 normalOS : NORMAL;
             };
 
             struct Varyings
             {
                 float4 positionHCS : SV_POSITION;
-                //float3 normalWS : TEXCOORD0;
-                //float3 viewDirWS : TEXCOORD1;
             };
 
             CBUFFER_START(UnityPerMaterial)
@@ -56,33 +53,11 @@ Shader "Custom/StencilWrite_FrontObject"
             {
                 Varyings OUT;
                 OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
-
                 return OUT;
             }
             
             half4 frag(Varyings IN) : SV_Target
             {
-                //half4 color = Color(0, 0, 0, 1);
-
-                /*
-                half3x3 kern = half3x3(
-                    0, 0, 0,
-                    0, 1, 0,
-                    0, 0, 0
-                );
-
-
-
-                [unroll]
-                for (int x = 0; x < 3; x++)
-                {
-                    [unroll]
-                    for (int y = 0; y < 3; y++)
-                    {
-                        
-                    }
-                }*/
-
                 return half4(_BaseColor.rgb, _Transparency);
             }
             ENDHLSL
