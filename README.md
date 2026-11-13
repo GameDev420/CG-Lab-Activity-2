@@ -6,7 +6,7 @@ While not particularly useful, I noticed that enabling color output on the objec
 
 It does have noticeable clipping when multiple objects overlap each other, even if not physically touching, but I would rather not delve into rendering queues for such a delicate shader at this point.
 
-While screen-space effects are likely more efficient and straightforward, having an effect applied to objects in world-space can be better for genres such as VR games, where diegetic elements and interfaces are vital parts of the experience. That being said, the specific examples below are geared toward the former for simplicity.
+While screen-space effects are likely more efficient and straightforward, having an effect applied to objects in world-space can be better for genres such as VR games, where diegetic elements and interfaces are vital parts of the experience. That being said, the specific examples below are geared toward the former for simplicity. In terms of gameplay, objects with any kind of screen or overlay filter physically attached to it could use or extend from this.
 
 # Fresnel Stencil
 
