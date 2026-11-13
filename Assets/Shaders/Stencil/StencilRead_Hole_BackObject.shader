@@ -2,12 +2,13 @@ Shader "Custom/StencilRead_Hole_BackObject"
 {
     Properties
     {
+        _BaseColor("Base Color", Color) = (1,1,1,1)
         _MainTex("Main Texture", 2D) = "white" {}
     }
 
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "Queue" = "Geometry" }
+        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "Queue" = "Geometry+1" }
 
         // Stencil Operations
         Stencil
@@ -42,6 +43,7 @@ Shader "Custom/StencilRead_Hole_BackObject"
             SAMPLER(sampler_MainTex);
 
             CBUFFER_START(UnityPerMaterial)
+                float4 _BaseColor;
                 float4 _MainTex_ST;
             CBUFFER_END
 
@@ -55,7 +57,7 @@ Shader "Custom/StencilRead_Hole_BackObject"
 
             half4 frag(Varyings IN) : SV_Target
             {
-                half4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv);
+                half4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv) * _BaseColor;
                 return color;
             }
             ENDHLSL

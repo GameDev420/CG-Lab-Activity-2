@@ -2,16 +2,13 @@ Shader "Custom/StencilWrite_FrontObject"
 {
     Properties
     {
-        //_MainTex("Main Tex", 2D) = "white" {}
-        _FresnelColor("Fresnel Color", Color) = (1, 1, 1, 1)
-        _RimIntensity("Rim Intensity", Float) = 1.5
-        _FresnelPower("Fresnel Power", Range(1.0, 10.0)) = 2.0
+        _BaseColor("Base Color", Color) = (1, 1, 1, 1)
         _Transparency("Transparency", Range(0.0, 1.0)) = 1.0
     }
 
     SubShader
     {
-        Tags { "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "Queue" = "Geometry+1" }
+        Tags { "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "Queue" = "Geometry" }
         Blend SrcAlpha OneMinusSrcAlpha
 
         // Disable color output (so the object doesn't appear visually)
@@ -38,21 +35,19 @@ Shader "Custom/StencilWrite_FrontObject"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                float3 normalOS : NORMAL;
+                //float3 normalOS : NORMAL;
             };
 
             struct Varyings
             {
                 float4 positionHCS : SV_POSITION;
-                float3 normalWS : TEXCOORD0;
-                float3 viewDirWS : TEXCOORD1;
+                //float3 normalWS : TEXCOORD0;
+                //float3 viewDirWS : TEXCOORD1;
             };
 
             CBUFFER_START(UnityPerMaterial)
 
-                half3 _FresnelColor;
-                float _RimIntensity;
-                float _FresnelPower;
+                half4 _BaseColor;
                 float _Transparency;
 
             CBUFFER_END
@@ -61,8 +56,7 @@ Shader "Custom/StencilWrite_FrontObject"
             {
                 Varyings OUT;
                 OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
-                OUT.normalWS = TransformObjectToWorldNormal(IN.normalOS);
-                OUT.viewDirWS = normalize(GetWorldSpaceViewDir(IN.positionOS.xyz));
+
                 return OUT;
             }
             
@@ -89,13 +83,7 @@ Shader "Custom/StencilWrite_FrontObject"
                     }
                 }*/
 
-                half3 normalWS = normalize(IN.normalWS);
-                half3 viewDirWS = normalize(IN.viewDirWS);
-                half fresnel = pow(1.0 - saturate(dot(viewDirWS, normalWS)), _FresnelPower);
-                half3 fresnelColor = _FresnelColor.rgb * fresnel * _RimIntensity;
-
-                return half4(0,0,0, _Transparency);
-                //return half4(0, 0, 0, 1); // Black color (will not be visible due to ColorMask 0)
+                return half4(_BaseColor.rgb, _Transparency);
             }
             ENDHLSL
         }
